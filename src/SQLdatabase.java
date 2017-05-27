@@ -62,7 +62,7 @@ public class SQLdatabase {
 			// Insert values into an ArrayList
 			while (rs.next()) {
 				this.meas.add(new Measurement(rs.getString("rdfid"), rs.getString("name"),
-						Double.parseDouble(rs.getString("value")), rs.getString("sub_rdfid")));
+						Double.parseDouble(rs.getString("value")), rs.getString("sub_rdfid"),Double.parseDouble(rs.getString("time"))));
 			}
 
 			// Import the learning set
@@ -70,8 +70,8 @@ public class SQLdatabase {
 			rs = stmt.executeQuery(sql); // execute query
 			// Insert values into an ArrayList
 			while (rs.next()) {
-				this.measTest.add(new Measurement(rs.getString("rdfid"), rs.getString("name"),
-						Double.parseDouble(rs.getString("value")), rs.getString("sub_rdfid")));
+				this.meas.add(new Measurement(rs.getString("rdfid"), rs.getString("name"),
+						Double.parseDouble(rs.getString("value")), rs.getString("sub_rdfid"),Double.parseDouble(rs.getString("time"))));
 			}
 			
 			System.out.println("Working database");
