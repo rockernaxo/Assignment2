@@ -11,5 +11,25 @@ public class Measurement {
 		this.subRdf=subRdf;
 		this.time=time;
 	}
+
+	public String getRdfId() {
+		return rdfId;
+	}
+
+	public String getSubRdf() {
+		return subRdf;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public double getValue() {
+		return value;
+	}
+
+	public double getTime() {
+		return time;
+	}
 	
 }
