@@ -14,8 +14,8 @@ public class SQLdatabase {
 	private static final String DISABLE_SSL = "?useSSL=false";
 	// Database credentials
 	private static final String USER = "root";
-	private static final String PASS = "root"; 
-	
+	private static final String PASS = "root";
+
 	private String sql = null;
 	private List<Substation> substation;
 	private List<Measurement> meas, measTest;
@@ -26,9 +26,9 @@ public class SQLdatabase {
 		this.measTest = new ArrayList<Measurement>();
 		create();
 	}
-	
-	public static void main (String args []){
-		new SQLdatabase();	
+
+	public static void main(String args[]) {
+		new SQLdatabase();
 	}
 
 	public void create() {
@@ -62,7 +62,8 @@ public class SQLdatabase {
 			// Insert values into an ArrayList
 			while (rs.next()) {
 				this.meas.add(new Measurement(rs.getString("rdfid"), rs.getString("name"),
-						Double.parseDouble(rs.getString("value")), rs.getString("sub_rdfid"),Double.parseDouble(rs.getString("time"))));
+						Double.parseDouble(rs.getString("value")), rs.getString("sub_rdfid"),
+						Double.parseDouble(rs.getString("time"))));
 			}
 
 			// Import the learning set
@@ -70,10 +71,11 @@ public class SQLdatabase {
 			rs = stmt.executeQuery(sql); // execute query
 			// Insert values into an ArrayList
 			while (rs.next()) {
-				this.meas.add(new Measurement(rs.getString("rdfid"), rs.getString("name"),
-						Double.parseDouble(rs.getString("value")), rs.getString("sub_rdfid"),Double.parseDouble(rs.getString("time"))));
+				this.measTest.add(new Measurement(rs.getString("rdfid"), rs.getString("name"),
+						Double.parseDouble(rs.getString("value")), rs.getString("sub_rdfid"),
+						Double.parseDouble(rs.getString("time"))));
 			}
-			
+
 			System.out.println("Working database");
 
 		} catch (SQLException se) {

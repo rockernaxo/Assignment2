@@ -7,31 +7,10 @@ import java.util.Set;
 
 
 public class KNN_internet {
-	
+	/*	
 	public static void main(String[] args){	
 		System.out.println("iris");
 		knn("classification\\iris_train.txt","classification\\iris_test.txt",1,2);
-		System.out.println();
-
-		
-		System.out.println("glass");
-		knn("classification\\glass_train.txt","classification\\glass_test.txt",1,0);
-		System.out.println();
-		
-		System.out.println("vowel");
-		knn("classification\\vowel_train.txt","classification\\vowel_test.txt",3,2);
-		System.out.println();
-		
-		System.out.println("vehicle");
-		knn("classification\\vehicle_train.txt","classification\\vehicle_test.txt",3,1);
-		System.out.println();
-		
-		System.out.println("letter");
-		knn("classification\\letter_train.txt","classification\\letter_test.txt",3,0);
-		System.out.println();
-		
-		System.out.println("DNA");
-		knn("classification\\dna_train.txt","classification\\dna_test.txt",5,2);
 		System.out.println();
 	}
 	
@@ -197,5 +176,5 @@ public class KNN_internet {
 		}
 		
 		return groupName.toString();
-	}
+	}*/
 }

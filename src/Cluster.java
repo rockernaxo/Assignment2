@@ -1,21 +1,18 @@
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-//import com.sun.javafx.scene.paint.GradientUtils.Point;
-
 public class Cluster {
-	
-	public List points;
-	public Point centroid;
-	public int id;
-	
-	//Creates a new Cluster
-	public Cluster(int id) {
+
+	private List<Point> points;
+	private Point centroid;
+	private int id;
+
+	// Creates a new Cluster
+	public Cluster(int id, Point centroid) {
 		this.id = id;
-		this.points = new ArrayList();
-		this.centroid = null;
+		this.points = new ArrayList<Point>();
+		this.centroid = centroid;
 	}
 
 	public Point getCentroid() {
@@ -26,27 +23,11 @@ public class Cluster {
 		this.centroid = centroid;
 	}
 
-	public List getPoints() {
+	public List<Point> getPoints() {
 		return points;
 	}
-	
-	public void addPoint(Point point) {
-		points.add(point);
-	}
-
-	public void setPoints(List points) {
-		this.points = points;
-	}
-
-
 
 	public int getId() {
 		return id;
 	}
-	
-	public void clear() {
-		points.clear();
-	}
-	
-
 }
