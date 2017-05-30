@@ -98,4 +98,34 @@ public class SQLdatabase {
 	public List<Measurement> getMeasTest() {
 		return measTest;
 	}
+
+	// Split list of measurements depending on the time variable and return the system's points
+	public static List<Point> splitByTime(List<Measurement> measurementList) {
+
+		List<Point> pointList = new ArrayList<Point>();
+		List<Measurement> measList = new ArrayList<Measurement>(measurementList);
+		
+		while (measList.size() != 0) {
+			// Get time from the first element of the set
+			double time = measList.get(0).getTime();
+			// Create a placeholder which aggregates all measurements with the
+			// same time
+			List<Measurement> measTime = new ArrayList<Measurement>();
+			// Iterate over all the measurements to group together those with
+			// the same time
+			for (Measurement meas : measList) {
+				if (meas.getTime() == time) {
+					measTime.add(meas);
+				}
+			}
+			// Now there is a point with N+N voltage and angle measurements -
+			// create a new point
+			pointList.add(new Point(measTime, 0, time));
+			// Remove the already added measurements from the list
+			measList.removeAll(measTime);
+		}
+		
+		return pointList;
+	}
+
 }

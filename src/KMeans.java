@@ -6,77 +6,44 @@ public class KMeans {
 
 	// Number of Clusters. This metric should be related to the number of points
 	private static final int k = 4;
-	private List<Point> points;
+	private List<Point> pointList, classifiedPoints;
 	private List<Cluster> clusters;
 
-	public KMeans() {
-		this.points = new ArrayList<Point>();
+	public KMeans(List<Point> pointList) {
+		// Instantiate variables
+		this.pointList = pointList;
 		this.clusters = new ArrayList<Cluster>();
+		this.classifiedPoints=new ArrayList<Point>();
+
+		// Initialize the k clusters
+		initializeClusters();
+		// Classify the set of measurements
 		play();
 	}
 
-	public static void main(String[] args) {
-		KMeans kmeans = new KMeans();
+	private void initializeClusters(){
+		// Create K Clusters. For the first iteration the centroids are randomly
+		// selected as the first k points
+		for (int i = 0; i < k; i++) {
+			this.clusters.add(new Cluster(i, this.pointList.get(i)));
+		}
 	}
-
 	private void play() {
-
-		initialize();
+		
 		calculate();
 
 		// Once the KMeans is done, we create the final list of points in where
 		// the cluster has been updated
-		ArrayList<Point> class_points = new ArrayList<Point>();
-		for (int i = 0; i < clusters.size(); i++) {
-			for (int j = 0; j < clusters.get(i).getPoints().size(); j++) {
-				Point p = (Point) clusters.get(i).getPoints().get(j);
+
+		for (int i = 0; i < this.clusters.size(); i++) {
+			for (int j = 0; j < this.clusters.get(i).getPoints().size(); j++) {
+				Point p = (Point) this.clusters.get(i).getPoints().get(j);
 				p.setClusterNumber(i);
-				class_points.add(p);
+				this.classifiedPoints.add(p);
 			}
 		}
-		System.out.println("End");
+		System.out.println("End KNN");
 
-	}
-
-	// Initializes the process
-	public void initialize() {
-		// The values are taken from the database
-		SQLdatabase info = new SQLdatabase();
-		// The points of the system are created from the measurements of the
-		// database.
-		// Note that one point has 18 attributes (9 voltage values and 9 angle
-		// values) which determine one state of the system during a certain time
-		// The values of the database are ordered following an order in space
-		// and time which will be used to define a point
-
-		// Split by time
-		List<Measurement> measList = info.getMeas();
-
-		while (measList.size() != 0) {
-			// Get time from the first element of the set
-			double time = measList.get(0).getTime();
-			// Create a placeholder which aggregates all measurements with the
-			// same time
-			List<Measurement> measTime = new ArrayList<Measurement>();
-			// Iterate over all the measurements to group together those with
-			// the same time
-			for (Measurement meas : measList) {
-				if (meas.getTime() == time) {
-					measTime.add(meas);
-				}
-			}
-			// Now there is a point with N+N voltage and angle measurements -
-			// create a new point
-			this.points.add(new Point(measTime, 0, time));
-			// Remove the already added measurements from the list
-			measList.removeAll(measTime);
-		}
-
-		// Create K Clusters. For the first iteration the centroids are randomly
-		// selected as the first 4 points
-		for (int i = 0; i < this.k; i++) {
-			clusters.add(new Cluster(i, this.points.get(i)));
-		}
 	}
 
 	// The process to calculate the K Means, with iterating method.
@@ -105,14 +72,14 @@ public class KMeans {
 
 			// Calculates total distance between new and old Centroids
 			double distance = 0;
-			
+
 			for (int i = 0; i < lastCentroids.size(); i++) {
 				distance += Point.euclideanDist(lastCentroids.get(i), currentCentroids.get(i));
 			}
-			
+
 			System.out.println("#################");
 			for (Cluster cluster : this.clusters) {
-				System.out.println("Cluster nº :"+cluster.getId()+" has "+cluster.getPoints().size()+" points");
+				System.out.println("Cluster nº :" + cluster.getId() + " has " + cluster.getPoints().size() + " points");
 			}
 			System.out.println("Iteration: " + iteration);
 			System.out.println("Centroid distances: " + distance);
@@ -147,7 +114,7 @@ public class KMeans {
 	// Method to assign the points the existing clusters
 	private void assignCluster() {
 
-		for (Point point : this.points) {
+		for (Point point : this.pointList) {
 			// Set a minimum distance of inf.
 			double min = Double.MAX_VALUE;
 			int nCluster = -1;
@@ -211,5 +178,9 @@ public class KMeans {
 				cluster.setCentroid(new Point(voltage, angle));
 			}
 		}
+	}
+
+	public List<Point> getClassifiedPoints() {
+		return classifiedPoints;
 	}
 }

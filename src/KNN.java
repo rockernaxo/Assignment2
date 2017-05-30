@@ -3,45 +3,67 @@ import java.util.Collections;
 import java.util.List;
 
 public class KNN {
-	
-	List<Point> pointList;
-	
 
-	public KNN() {
-		this.pointList = new ArrayList<Point>();
-	}
-	
-	public void initialize () {
+	private List<Point> pointList, testPointList;
+	private int k;
+
+	public KNN(List<Point> testPointList, List<Point> pointList, int k) {
+		this.testPointList = testPointList;
+		this.pointList = pointList;
+		this.k=k;
 		
-		
+		for (Point point : testPointList) {
+			go(point);
+		}
 	}
-	
+
 	public void go(Point testPoint) {
-		
-		// Create object Result that contains distance to a specific flower and
-		// flower’s type
+
+		// Create object Distance that contains distance to a specific point and the cluster number
 		ArrayList<Distance> distanceList = new ArrayList<Distance>();
 
 		for (Point point : this.pointList) {
-			// Calculate the variable distance – square of Euclidean distance from the test flower
+			// Calculate the distance – Euclidean distance
 			double distance = Point.euclideanDist(point, testPoint);
 			distanceList.add(new Distance(distance, point.getClusterNumber()));
 		}
 
+		// Sort the distance List in increasing order
 		Collections.sort(distanceList, new DistanceComparator());
-		int k = 4;
-		for (int x = 0; x < k; x++) {
+		
+		// Print the distance for the 4 closest neighbors
+		for (int x = 0; x < this.k; x++) {
 			System.out.println(distanceList.get(x).getNCluster() + "…" + distanceList.get(x).getDistance());
 		}
 
-		// Get the K neighbors and assign the type to the test flower
-		
-		//test.setType(getType(resultList, k));
+		// Assign the test point to the most common cluster
+		testPoint.setClusterNumber(assignCluster(distanceList, k));
 
-		//System.out.printf("The result is: \n The flower is: " + test.getType());
+		System.out.printf("The result is: \n The point belongs to cluster: " + testPoint.getClusterNumber()+"\n");
+		System.out.println("###############");
 	}
-	
-	private void assignCluster() {
-		
+
+	private int assignCluster(ArrayList<Distance> distanceList, int k) {
+
+		int nCluster = -1;
+
+		ArrayList<Integer> count = new ArrayList<Integer>(Collections.nCopies(k, 0));
+
+		// Iterate over the K closest neighbors
+		for (int i=0; i<k; i++) {
+			int clusterIndex = distanceList.get(i).getNCluster();
+			count.set(clusterIndex, count.get(clusterIndex) + 1);
+		}
+
+		// Return the most common
+		int maxCount = 0;
+		for (int i = 0; i < count.size(); i++) {
+			if (count.get(i) > maxCount) {
+				maxCount = count.get(i);
+				nCluster = i;
+			}
+		}
+
+		return nCluster;
 	}
 }
