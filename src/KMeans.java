@@ -42,7 +42,7 @@ public class KMeans {
 				this.classifiedPoints.add(p);
 			}
 		}
-		System.out.println("End KNN");
+		System.out.printf("\n\rEnd Kmeans clustering\n\n\r");
 
 	}
 

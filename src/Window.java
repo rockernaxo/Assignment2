@@ -1,15 +1,11 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JFrame;
 
+@SuppressWarnings("serial")
 public class Window extends JFrame {
-
-	private List<Point> pointList;
-	
-	public Window() {
-
-	}
 
 	public static void main(String[] args) {
 		// The values are taken from the database
@@ -21,12 +17,11 @@ public class Window extends JFrame {
 		// The values of the database are ordered following an order in space
 		// and time which will be used to define a point
 		
-		int k = 4;
+		int k = 6;
 		List<Measurement> learnSet = new ArrayList<Measurement>(info.getMeas());
-		List<Measurement> testSet = new ArrayList<Measurement>(info.getMeas());
+		List<Measurement> testSet = new ArrayList<Measurement>(info.getMeasTest());
 		
 		KMeans kmeans = new KMeans(SQLdatabase.splitByTime(learnSet));
-		System.out.print("hola");
 		KNN knn  =new KNN (SQLdatabase.splitByTime(testSet), kmeans.getClassifiedPoints(), k);
 	}
 

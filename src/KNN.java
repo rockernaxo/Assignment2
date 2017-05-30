@@ -10,8 +10,8 @@ public class KNN {
 	public KNN(List<Point> testPointList, List<Point> pointList, int k) {
 		this.testPointList = testPointList;
 		this.pointList = pointList;
-		this.k=k;
-		
+		this.k = k;
+
 		for (Point point : testPointList) {
 			go(point);
 		}
@@ -19,7 +19,8 @@ public class KNN {
 
 	public void go(Point testPoint) {
 
-		// Create object Distance that contains distance to a specific point and the cluster number
+		// Create object Distance that contains distance to a specific point and
+		// the cluster number
 		ArrayList<Distance> distanceList = new ArrayList<Distance>();
 
 		for (Point point : this.pointList) {
@@ -30,16 +31,17 @@ public class KNN {
 
 		// Sort the distance List in increasing order
 		Collections.sort(distanceList, new DistanceComparator());
-		
+
 		// Print the distance for the 4 closest neighbors
 		for (int x = 0; x < this.k; x++) {
-			System.out.println(distanceList.get(x).getNCluster() + "…" + distanceList.get(x).getDistance());
+			System.out.println("Cluster nº " + distanceList.get(x).getNCluster() + " distance "
+					+ distanceList.get(x).getDistance());
 		}
 
 		// Assign the test point to the most common cluster
 		testPoint.setClusterNumber(assignCluster(distanceList, k));
 
-		System.out.printf("The result is: \n The point belongs to cluster: " + testPoint.getClusterNumber()+"\n");
+		System.out.printf("The result is: \n The point belongs to cluster: " + testPoint.getClusterNumber() + "\n");
 		System.out.println("###############");
 	}
 
@@ -50,7 +52,7 @@ public class KNN {
 		ArrayList<Integer> count = new ArrayList<Integer>(Collections.nCopies(k, 0));
 
 		// Iterate over the K closest neighbors
-		for (int i=0; i<k; i++) {
+		for (int i = 0; i < k; i++) {
 			int clusterIndex = distanceList.get(i).getNCluster();
 			count.set(clusterIndex, count.get(clusterIndex) + 1);
 		}
