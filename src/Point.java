@@ -62,5 +62,16 @@ public class Point {
 		}
 		return Math.sqrt(distance);
 	}
-
+	
+	// Method to calculate the average voltage and angle
+	public static double getAverage(List<Double> measure){
+		double average=-1;
+		
+		for (int i=0; i<measure.size(); i++) {
+			average+=measure.get(i);
+		}
+		
+		return average/measure.size();
+		
+	}
 }

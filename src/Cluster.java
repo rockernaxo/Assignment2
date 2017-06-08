@@ -30,4 +30,8 @@ public class Cluster {
 	public int getId() {
 		return id;
 	}
+	
+	public void addPoint(Point point) {
+		this.points.add(point);
+	}
 }

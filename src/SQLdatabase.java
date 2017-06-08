@@ -5,9 +5,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
+import javax.swing.JOptionPane;
+
+
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 
 public class SQLdatabase {
-
+	
+	
+	private final String database, learn, test;
 	// JDBC driver name and database URL
 	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	private static final String DB_URL = "jdbc:mysql://localhost/";
@@ -20,15 +27,17 @@ public class SQLdatabase {
 	private List<Substation> substation;
 	private List<Measurement> meas, measTest;
 
-	public SQLdatabase() {
+	public SQLdatabase(String database, String learn, String test) {
 		this.substation = new ArrayList<Substation>();
 		this.meas = new ArrayList<Measurement>();
 		this.measTest = new ArrayList<Measurement>();
+		
+		// Database and tables to get from MySQL
+		this.database=database;
+		this.learn=learn;
+		this.test=test;
+		
 		create();
-	}
-
-	public static void main(String args[]) {
-		new SQLdatabase();
 	}
 
 	public void create() {
@@ -45,20 +54,12 @@ public class SQLdatabase {
 			System.out.println("Creating database...");
 			stmt = conn.createStatement();
 			conn = DriverManager.getConnection(DB_URL + "Subtables" + DISABLE_SSL, USER, PASS);
-			sql = "USE subtables";
+			sql = "USE "+this.database;
 			stmt.executeUpdate(sql);
 
-			// Import all substations
-			sql = "SELECT * FROM SUBSTATIONS";
-			ResultSet rs = stmt.executeQuery(sql); // execute query
-			// Insert values into an ArrayList
-			while (rs.next()) {
-				this.substation.add(new Substation(rs.getString("rdfid"), rs.getString("name")));
-			}
-
 			// Import all measured values
-			sql = "SELECT * FROM MEASUREMENTS";
-			rs = stmt.executeQuery(sql); // execute query
+			sql = "SELECT * FROM "+this.learn;
+			ResultSet rs = stmt.executeQuery(sql); // execute query
 			// Insert values into an ArrayList
 			while (rs.next()) {
 				this.meas.add(new Measurement(rs.getString("rdfid"), rs.getString("name"),
@@ -67,7 +68,7 @@ public class SQLdatabase {
 			}
 
 			// Import the learning set
-			sql = "SELECT * FROM ANALOG_VALUES";
+			sql = "SELECT * FROM "+this.test;
 			rs = stmt.executeQuery(sql); // execute query
 			// Insert values into an ArrayList
 			while (rs.next()) {
@@ -77,7 +78,11 @@ public class SQLdatabase {
 			}
 
 			System.out.println("Working database");
-
+			
+		} catch (MySQLSyntaxErrorException e) {
+			JOptionPane.showMessageDialog(null, "Those tables are not in the database, please check your sintax.");		
+		} catch (CommunicationsException ce){
+			JOptionPane.showMessageDialog(null, "The SQL server may not have been initialized.");		
 		} catch (SQLException se) {
 			// Handle errors for JDBC
 			se.printStackTrace();

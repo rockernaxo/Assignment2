@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class KMeans {
 
@@ -13,7 +14,7 @@ public class KMeans {
 		// Instantiate variables
 		this.pointList = pointList;
 		this.clusters = new ArrayList<Cluster>();
-		this.classifiedPoints=new ArrayList<Point>();
+		this.classifiedPoints = new ArrayList<Point>();
 
 		// Initialize the k clusters
 		initializeClusters();
@@ -21,15 +22,17 @@ public class KMeans {
 		play();
 	}
 
-	private void initializeClusters(){
+	private void initializeClusters() {
 		// Create K Clusters. For the first iteration the centroids are randomly
 		// selected as the first k points
+		// r.nextDouble();
 		for (int i = 0; i < k; i++) {
-			this.clusters.add(new Cluster(i, this.pointList.get(i)));
+			this.clusters.add(new Cluster(i, this.pointList.get(this.pointList.size()-1-i)));
 		}
 	}
+
 	private void play() {
-		
+
 		calculate();
 
 		// Once the KMeans is done, we create the final list of points in where
@@ -37,9 +40,9 @@ public class KMeans {
 
 		for (int i = 0; i < this.clusters.size(); i++) {
 			for (int j = 0; j < this.clusters.get(i).getPoints().size(); j++) {
-				Point p = (Point) this.clusters.get(i).getPoints().get(j);
-				p.setClusterNumber(i);
-				this.classifiedPoints.add(p);
+				Point point = this.clusters.get(i).getPoints().get(j);
+				point.setClusterNumber(i);
+				this.classifiedPoints.add(point);
 			}
 		}
 		System.out.printf("\n\rEnd Kmeans clustering\n\n\r");
@@ -101,11 +104,6 @@ public class KMeans {
 	private List<Point> getCentroids() {
 		List<Point> centroids = new ArrayList<Point>();
 		for (Cluster cluster : this.clusters) {
-			// int x = 0;
-			// Point aux = cluster.getCentroid();
-			// Point point = new
-			// Point(aux.getV1(),aux.getV2(),aux.getV3(),aux.getV4(),aux.getV5(),aux.getV6(),aux.getV7(),aux.getV8(),aux.getV9()
-			// ,aux.getA1(),aux.getA2(),aux.getA3(),aux.getA4(),aux.getA5(),aux.getA6(),aux.getA7(),aux.getA8(),aux.getA9(),x);
 			centroids.add(cluster.getCentroid());
 		}
 		return centroids;
@@ -131,7 +129,7 @@ public class KMeans {
 			}
 			// The point is added to the closest cluster
 			point.setClusterNumber(nCluster);
-			this.clusters.get(nCluster).getPoints().add(point);
+			this.clusters.get(nCluster).addPoint(point);
 		}
 	}
 
@@ -142,29 +140,32 @@ public class KMeans {
 			List<Point> pointList = cluster.getPoints();
 			int nPoints = pointList.size();
 
-			// Initialize voltage and angle list of the centroid with all zeroes
-			int nMeas = pointList.get(0).getVoltage().size();
-			List<Double> voltage = new ArrayList<Double>(Collections.nCopies(nMeas, 0.0));
-			List<Double> angle = new ArrayList<Double>(Collections.nCopies(nMeas, 0.0));
-
-			// Iterate over all the points of the cluster to calculate the new
-			// centroid
-			for (Point point : pointList) {
-				// Iterate over the N voltages and add them together
-				for (int i = 0; i < point.getVoltage().size(); i++) {
-					double newvolt = point.getVoltage().get(i);
-					double lastvolt = voltage.get(i);
-					voltage.set(i, lastvolt + newvolt);
-				}
-
-				// Iterate over the N voltages and add them together
-				for (int i = 0; i < point.getVoltage().size(); i++) {
-					angle.set(i, angle.get(i) + point.getAngle().get(i));
-				}
-			}
-
-			// Normalize the quantities dividing by n
 			if (nPoints > 0) {
+				// Initialize voltage and angle list of the centroid with all
+				// zeroes
+				int nMeas = pointList.get(0).getVoltage().size();
+				List<Double> voltage = new ArrayList<Double>(Collections.nCopies(nMeas, 0.0));
+				List<Double> angle = new ArrayList<Double>(Collections.nCopies(nMeas, 0.0));
+
+				// Iterate over all the points of the cluster to calculate the
+				// new
+				// centroid
+				for (Point point : pointList) {
+					// Iterate over the N voltages and add them together
+					for (int i = 0; i < point.getVoltage().size(); i++) {
+						double newvolt = point.getVoltage().get(i);
+						double lastvolt = voltage.get(i);
+						voltage.set(i, lastvolt + newvolt);
+					}
+
+					// Iterate over the N voltages and add them together
+					for (int i = 0; i < point.getVoltage().size(); i++) {
+						angle.set(i, angle.get(i) + point.getAngle().get(i));
+					}
+				}
+
+				// Normalize the quantities dividing by n
+
 				// Iterate over the N voltages and add them together
 				for (int i = 0; i < voltage.size(); i++) {
 					voltage.set(i, voltage.get(i) / nPoints);
@@ -181,6 +182,10 @@ public class KMeans {
 	}
 
 	public List<Point> getClassifiedPoints() {
-		return classifiedPoints;
+		return this.classifiedPoints;
+	}
+
+	public List<Cluster> getClusters() {
+		return this.clusters;
 	}
 }
