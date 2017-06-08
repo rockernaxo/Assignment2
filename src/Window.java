@@ -207,21 +207,21 @@ public class Window extends JFrame {
 	private void call2KNN(int neighbors) {
 		KNN knn = new KNN(SQLdatabase.splitByTime(testSet), kmeans.getClassifiedPoints(), neighbors);
 		List<Point> results = knn.getResults();
-		
-		JFrame hola = new JFrame();
+
+		JFrame frameResults = new JFrame();
 		JTextArea txtResult = new JTextArea();
-		   
-	     for (Point point : results) {
-	        txtResult.append("The point belongs to cluster " + point.getClusterNumber()+"\n");
-	     }
-   
-	   
-	   hola.add(txtResult);
-	   
-	   hola.setDefaultCloseOperation(EXIT_ON_CLOSE);
-	   hola.pack();
-	   hola.setVisible(true);
-	   
-	   
+
+		for (Point point : results) {
+			txtResult.append("The point belongs to cluster " + point.getClusterNumber() + "\n");
+		}
+
+		// Add the text area to the JFrame
+		frameResults.add(txtResult);
+
+		// Show
+		frameResults.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		frameResults.pack();
+		frameResults.setVisible(true);
+
 	}
 }
