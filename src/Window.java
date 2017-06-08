@@ -171,8 +171,10 @@ public class Window extends JFrame {
 		panel_3.add(btnLearn);
 
 		main.add(panel_4);
+		btnTest.setEnabled(false);
 		btnTest.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				btnTest.setEnabled(true);;
 				call2KNN(Integer.parseInt(txtNeighbor.getText()));
 			}
 		});
@@ -216,7 +218,7 @@ public class Window extends JFrame {
 		}
 
 		// Add the text area to the JFrame
-		frameResults.add(txtResult);
+		frameResults.getContentPane().add(txtResult);
 
 		// Show
 		frameResults.setDefaultCloseOperation(EXIT_ON_CLOSE);
