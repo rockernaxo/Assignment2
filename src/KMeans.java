@@ -25,9 +25,7 @@ public class KMeans {
 	}
 
 	private void initializeClusters() {
-		// Create K Clusters. For the first iteration the centroids are randomly
-		// selected as the first k points
-		// r.nextDouble();
+		// Create K Clusters. For the first iteration the centroids are randomly selected
 		int random;
 		random =(int) (Math.random() * 192) + 4;
 		for (int i = 0; i < k; i++) {
