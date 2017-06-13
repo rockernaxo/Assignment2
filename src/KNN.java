@@ -68,7 +68,7 @@ public class KNN {
 
 		return nCluster;
 	}
-	
+
 	public List<Point> getResults() {
 		return this.testPointList;
 	}

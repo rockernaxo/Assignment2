@@ -90,7 +90,7 @@ public class Window {
 	}
 
 	public Window() {
-		
+
 		panel.setLayout(cl);
 
 		JLabel lblSqlDatabase = new JLabel("SQL Database");
@@ -202,20 +202,20 @@ public class Window {
 		this.sqldb = new SQLdatabase(database, learning, test);
 		this.learnSet = new ArrayList<Measurement>(this.sqldb.getMeas());
 		this.testSet = new ArrayList<Measurement>(this.sqldb.getMeasTest());
-		if (this.learnSet.size()==0) {
+		if (this.learnSet.size() == 0) {
 			return false;
 		} else {
 			return true;
 		}
-		
+
 	}
 
 	private void call2Kmeans(int clusters) {
 		this.kmeans = new KMeans(SQLdatabase.splitByTime(this.learnSet));
-		this.clusters=this.kmeans.getClusters();
+		this.clusters = this.kmeans.getClusters();
 		// Display the results in a new window
 		Chart chart = new Chart(this.clusters);
-		
+
 		chart.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		chart.pack();
 		RefineryUtilities.centerFrameOnScreen(chart);
@@ -229,19 +229,20 @@ public class Window {
 
 		JDialog frameResults = new JDialog();
 		JTextArea txtResult = new JTextArea();
-		
+
 		for (Point point : results) {
 			txtResult.append("New point\n");
 			txtResult.append("######################################\n");
 			txtResult.append("Voltages:\n");
 			for (Double voltage : point.getVoltage()) {
-				txtResult.append(voltage.toString()+" ");
+				txtResult.append(voltage.toString() + " ");
 			}
 			txtResult.append("\n Angles:\n ");
 			for (Double angle : point.getAngle()) {
-				txtResult.append(angle.toString()+" ");
-			}			
-			txtResult.append("\n \n The point belongs to cluster " + clusters.get(point.getClusterNumber()).getLabel() + "\n");
+				txtResult.append(angle.toString() + " ");
+			}
+			txtResult.append(
+					"\n \n The point belongs to cluster " + clusters.get(point.getClusterNumber()).getLabel() + "\n");
 			txtResult.append("######################################\n");
 		}
 

@@ -20,12 +20,12 @@ public class Chart extends JDialog {
 
 		// force aliasing of the rendered content..
 		chart.getRenderingHints().put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
+
 		final ChartPanel panel = new ChartPanel(chart, true);
 
 		// Title to the dialog
 		this.setTitle("K means classification");
-		
+
 		panel.setPreferredSize(new java.awt.Dimension(500, 270));
 		// panel.setHorizontalZoom(true);
 		// panel.setVerticalZoom(true);
