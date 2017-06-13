@@ -46,7 +46,7 @@ public class KMeans {
 				point.setClusterNumber(i);
 				this.classifiedPoints.add(point);
 			}
-		}
+		} 
 		System.out.printf("\n\rEnd Kmeans clustering\n\n\r");
 
 	}
