@@ -133,7 +133,9 @@ public class Window {
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// The values are taken from the database
-				buildDatabase(txtDatabase.getText(), txtLearn.getText(), txtTest.getText());
+				if (buildDatabase(txtDatabase.getText(), txtLearn.getText(), txtTest.getText())) {
+					cl.show(panel, "2");
+				}
 			}
 		});
 		panel_2.add(btnLoad);
@@ -196,12 +198,16 @@ public class Window {
 		this.window.setVisible(true);
 	}
 
-	private void buildDatabase(String database, String learning, String test) {
+	private boolean buildDatabase(String database, String learning, String test) {
 		this.sqldb = new SQLdatabase(database, learning, test);
-		this.cl.show(this.panel, "2");
 		this.learnSet = new ArrayList<Measurement>(this.sqldb.getMeas());
 		this.testSet = new ArrayList<Measurement>(this.sqldb.getMeasTest());
-
+		if (this.learnSet.size()==0) {
+			return false;
+		} else {
+			return true;
+		}
+		
 	}
 
 	private void call2Kmeans(int clusters) {
