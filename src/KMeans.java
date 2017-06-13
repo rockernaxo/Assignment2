@@ -20,16 +20,16 @@ public class KMeans {
 		initializeClusters();
 		// Classify the set of measurements
 		play();
-		// Set the correct labels
-		identify();
+		new Labelling(this.clusters);
+
 	}
 
 	private void initializeClusters() {
-		// Create K Clusters. For the first iteration the centroids are randomly
-		// selected as the first k points
-		// r.nextDouble();
+		// Create K Clusters. For the first iteration the centroids are randomly selected
+		int random;
+		random =(int) (Math.random() * 192) + 4;
 		for (int i = 0; i < k; i++) {
-			this.clusters.add(new Cluster(i, this.pointList.get(this.pointList.size()-1-i)));
+			this.clusters.add(new Cluster(i, this.pointList.get(this.pointList.size()-random-i)));
 		}
 	}
 
