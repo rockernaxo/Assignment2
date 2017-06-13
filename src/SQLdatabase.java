@@ -24,11 +24,9 @@ public class SQLdatabase {
 	private static final String PASS = "root";
 
 	private String sql = null;
-	private List<Substation> substation;
 	private List<Measurement> meas, measTest;
 
 	public SQLdatabase(String database, String learn, String test) {
-		this.substation = new ArrayList<Substation>();
 		this.meas = new ArrayList<Measurement>();
 		this.measTest = new ArrayList<Measurement>();
 		
@@ -90,10 +88,6 @@ public class SQLdatabase {
 			// Handle errors for Class.forName
 			e.printStackTrace();
 		}
-	}
-
-	public List<Substation> getSubstation() {
-		return substation;
 	}
 
 	public List<Measurement> getMeas() {

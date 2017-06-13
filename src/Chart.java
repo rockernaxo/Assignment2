@@ -1,23 +1,20 @@
 import java.awt.RenderingHints;
 import java.util.List;
 
+import javax.swing.JDialog;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.title.TextTitle;
-import org.jfree.chart.title.Title;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RectangleEdge;
-import org.jfree.ui.RefineryUtilities;
 
-public class Chart extends ApplicationFrame {
+@SuppressWarnings("serial")
+public class Chart extends JDialog {
 
-	public Chart(String title, List<Cluster> clusters) {
-		super(title);
+	public Chart(List<Cluster> clusters) {
+		super();
 		final JFreeChart chart = ChartFactory.createScatterPlot("Kmeans", "Average voltage", "Average angle",
 				data2Plot(clusters));
 
@@ -26,6 +23,8 @@ public class Chart extends ApplicationFrame {
 		
 		final ChartPanel panel = new ChartPanel(chart, true);
 
+		// Title to the dialog
+		this.setTitle("K means classification");
 		
 		panel.setPreferredSize(new java.awt.Dimension(500, 270));
 		// panel.setHorizontalZoom(true);

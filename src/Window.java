@@ -19,6 +19,8 @@ import demo.FastScatterPlotDemo;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 
 import java.awt.GridBagLayout;
@@ -30,6 +32,8 @@ import javax.swing.SwingUtilities;
 import java.awt.CardLayout;
 import java.awt.Font;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import java.awt.FlowLayout;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.GroupLayout;
@@ -45,6 +49,7 @@ public class Window {
 	private JTextField txtTest;
 	private JTextField txtLearn;
 	private List<Measurement> learnSet, testSet;
+	private List<Cluster> clusters;
 	private KMeans kmeans;
 
 	private final CardLayout cl = new CardLayout();
@@ -78,13 +83,14 @@ public class Window {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				new Window("hola");
+				new Window();
 			}
 
 		});
 	}
 
-	public Window(final String title) {
+	public Window() {
+		
 		panel.setLayout(cl);
 
 		JLabel lblSqlDatabase = new JLabel("SQL Database");
@@ -176,7 +182,7 @@ public class Window {
 		btnTest.setEnabled(false);
 		btnTest.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				call2KNN(Integer.parseInt(txtNeighbor.getText()));
+				call2KNN(Integer.parseInt(txtNeighbor.getText()), clusters);
 			}
 		});
 		panel_4.add(btnTest);
@@ -184,8 +190,9 @@ public class Window {
 		// Add the container to the Jframe
 		cl.show(this.panel, "1");
 		this.window.getContentPane().add(this.panel);
-		this.window.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.window.pack();
+		this.window.setTitle("Assignment 2");
 		this.window.setVisible(true);
 	}
 
@@ -199,8 +206,9 @@ public class Window {
 
 	private void call2Kmeans(int clusters) {
 		this.kmeans = new KMeans(SQLdatabase.splitByTime(this.learnSet));
+		this.clusters=this.kmeans.getClusters();
 		// Display the results in a new window
-		Chart chart = new Chart("K Means results", this.kmeans.getClusters());
+		Chart chart = new Chart(this.clusters);
 		
 		chart.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		chart.pack();
@@ -209,19 +217,31 @@ public class Window {
 
 	}
 
-	private void call2KNN(int neighbors) {
+	private void call2KNN(int neighbors, List<Cluster> clusters) {
 		KNN knn = new KNN(SQLdatabase.splitByTime(testSet), kmeans.getClassifiedPoints(), neighbors);
 		List<Point> results = knn.getResults();
 
-		JFrame frameResults = new JFrame();
+		JDialog frameResults = new JDialog();
 		JTextArea txtResult = new JTextArea();
-
+		
 		for (Point point : results) {
-			txtResult.append("The point belongs to cluster " + point.getClusterNumber() + "\n");
+			txtResult.append("New point\n");
+			txtResult.append("######################################\n");
+			txtResult.append("Voltages:\n");
+			for (Double voltage : point.getVoltage()) {
+				txtResult.append(voltage.toString()+" ");
+			}
+			txtResult.append("\n Angles:\n ");
+			for (Double angle : point.getAngle()) {
+				txtResult.append(angle.toString()+" ");
+			}			
+			txtResult.append("\n \n The point belongs to cluster " + clusters.get(point.getClusterNumber()).getLabel() + "\n");
+			txtResult.append("######################################\n");
 		}
 
 		// Add the text area to the JFrame
-		frameResults.getContentPane().add(txtResult);
+		frameResults.getContentPane().add(new JScrollPane(txtResult));
+		frameResults.setTitle("KNN classification");
 
 		// Show
 		frameResults.pack();

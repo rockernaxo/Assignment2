@@ -20,8 +20,8 @@ public class KMeans {
 		initializeClusters();
 		// Classify the set of measurements
 		play();
-		new Labelling(this.clusters);
-
+		// Identify clusters with predefined tags
+		identify();
 	}
 
 	private void initializeClusters() {
@@ -190,7 +190,9 @@ public class KMeans {
 	public List<Cluster> getClusters() {
 		return this.clusters;
 	}
-	
+
+	// This method has been specifically created for tagging the 4 states of the system
+	// In case of different states, only this part of the code should be adapted
 	public void identify() {
 		// Create a new variable list
 		List<Cluster> newClusters = new ArrayList<Cluster>(this.clusters);
@@ -211,11 +213,12 @@ public class KMeans {
 		}
 		
 		newClusters.get(clNumber).setLabel("Line disconnected");
-		newClusters.remove(clNumber);
-		
+
+				
 		// Identify the low load rate
 		double minVolt=Double.MAX_VALUE;
 		double minAng =Double.MAX_VALUE;
+		int clNumber2=0;
 		
 		// Identify the line disconnected
 		for (int i =0; i<this.clusters.size(); i++) {
@@ -224,14 +227,46 @@ public class KMeans {
 			if (avVolt<minVolt && avAng<minAng){
 				minVolt=avVolt;
 				minAng=avAng;
-				clNumber=i;
+				clNumber2=i;
 			}		
 		}
 		
-		newClusters.get(clNumber).setLabel("Low load rate");
-		newClusters.remove(clNumber);
+		newClusters.get(clNumber2).setLabel("Low load rate");
 		
-		newClusters.get(0).setLabel("hola");
-		newClusters.get(1).setLabel("adios");
+		// Remove already tagged clusters
+		newClusters.remove(this.clusters.get(clNumber2));
+		newClusters.remove(this.clusters.get(clNumber));
+		
+		
+		// Identify the remaining 2 by means of the power flows
+		List<Double> flowList = new ArrayList<Double>();
+		double flow;
+		double E1, E4, E6, E3, E2, E8;
+		double A1, A4, A6, A3, A2, A8;
+		
+		// Calculate the flow for each of the target situations
+		for (int i = 0; i < newClusters.size(); i++) {
+			E1=newClusters.get(i).getCentroid().getVoltage().get(0);
+			E4=newClusters.get(i).getCentroid().getVoltage().get(3);
+			E6=newClusters.get(i).getCentroid().getVoltage().get(5);
+			E3=newClusters.get(i).getCentroid().getVoltage().get(2);
+			E2=newClusters.get(i).getCentroid().getVoltage().get(1);
+			E8=newClusters.get(i).getCentroid().getVoltage().get(8);
+			A1=newClusters.get(i).getCentroid().getAngle().get(0);
+			A4=newClusters.get(i).getCentroid().getAngle().get(3);
+			A6=newClusters.get(i).getCentroid().getAngle().get(5);
+			A3=newClusters.get(i).getCentroid().getAngle().get(2);
+			A2=newClusters.get(i).getCentroid().getAngle().get(1);
+			A8=newClusters.get(i).getCentroid().getAngle().get(8);
+		
+			flow=(Math.abs(E1*E4*Math.sin(Math.toRadians(E1-E4)))+ Math.abs(E6*E3*Math.sin(Math.toRadians(E6-E3)))
+					+Math.abs(E2*E8*Math.sin(Math.toRadians(E2-E8))))/3;
+			flowList.add(flow);
+		}
+		
+		newClusters.get(flowList.indexOf(Collections.max(flowList))).setLabel("High Load rate");
+		newClusters.get(flowList.indexOf(Collections.min(flowList))).setLabel("Generator shutdown");
+		
+		
 	}
 }
