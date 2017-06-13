@@ -231,6 +231,7 @@ public class KMeans {
 		newClusters.get(clNumber).setLabel("Low load rate");
 		newClusters.remove(clNumber);
 		
-		
+		newClusters.get(0).setLabel("hola");
+		newClusters.get(1).setLabel("adios");
 	}
 }
