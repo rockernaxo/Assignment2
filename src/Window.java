@@ -40,7 +40,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
-public class Window extends JFrame {
+public class Window {
 	private JTextField txtDatabase;
 	private JTextField txtTest;
 	private JTextField txtLearn;
@@ -48,6 +48,7 @@ public class Window extends JFrame {
 	private KMeans kmeans;
 
 	private final CardLayout cl = new CardLayout();
+	private final JFrame window = new JFrame();
 	private final JButton btnLoad = new JButton("Load");
 	private final JPanel panel = new JPanel();
 	private final JPanel sql = new JPanel();
@@ -166,6 +167,7 @@ public class Window extends JFrame {
 		btnLearn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				call2Kmeans(Integer.parseInt(txtClusters.getText()));
+				btnTest.setEnabled(true);
 			}
 		});
 		panel_3.add(btnLearn);
@@ -174,7 +176,6 @@ public class Window extends JFrame {
 		btnTest.setEnabled(false);
 		btnTest.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				btnTest.setEnabled(true);;
 				call2KNN(Integer.parseInt(txtNeighbor.getText()));
 			}
 		});
@@ -182,10 +183,10 @@ public class Window extends JFrame {
 
 		// Add the container to the Jframe
 		cl.show(this.panel, "1");
-		getContentPane().add(this.panel);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.pack();
-		this.setVisible(true);
+		this.window.getContentPane().add(this.panel);
+		this.window.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		this.window.pack();
+		this.window.setVisible(true);
 	}
 
 	private void buildDatabase(String database, String learning, String test) {
@@ -200,6 +201,8 @@ public class Window extends JFrame {
 		this.kmeans = new KMeans(SQLdatabase.splitByTime(this.learnSet));
 		// Display the results in a new window
 		Chart chart = new Chart("K Means results", this.kmeans.getClusters());
+		
+		chart.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		chart.pack();
 		RefineryUtilities.centerFrameOnScreen(chart);
 		chart.setVisible(true);
@@ -221,7 +224,6 @@ public class Window extends JFrame {
 		frameResults.getContentPane().add(txtResult);
 
 		// Show
-		frameResults.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		frameResults.pack();
 		frameResults.setVisible(true);
 

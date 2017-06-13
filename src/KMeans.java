@@ -20,8 +20,8 @@ public class KMeans {
 		initializeClusters();
 		// Classify the set of measurements
 		play();
-		
 		new Labelling(this.clusters);
+
 	}
 
 	private void initializeClusters() {
@@ -191,5 +191,48 @@ public class KMeans {
 
 	public List<Cluster> getClusters() {
 		return this.clusters;
+	}
+	
+	public void identify() {
+		// Create a new variable list
+		List<Cluster> newClusters = new ArrayList<Cluster>(this.clusters);
+		
+		double maxVolt=0.0;
+		double maxAng =0.0;
+		int clNumber=0;
+		
+		// Identify the line disconnected
+		for (int i =0; i<this.clusters.size(); i++) {
+			double avVolt = Point.getAverage(this.clusters.get(i).getCentroid().getVoltage());
+			double avAng = Point.getAverage(this.clusters.get(i).getCentroid().getAngle());
+			if (avVolt>maxVolt && avAng>maxAng){
+				maxVolt=avVolt;
+				maxAng=avAng;
+				clNumber=i;
+			}		
+		}
+		
+		newClusters.get(clNumber).setLabel("Line disconnected");
+		newClusters.remove(clNumber);
+		
+		// Identify the low load rate
+		double minVolt=Double.MAX_VALUE;
+		double minAng =Double.MAX_VALUE;
+		
+		// Identify the line disconnected
+		for (int i =0; i<this.clusters.size(); i++) {
+			double avVolt = Point.getAverage(this.clusters.get(i).getCentroid().getVoltage());
+			double avAng = Point.getAverage(this.clusters.get(i).getCentroid().getAngle());
+			if (avVolt<minVolt && avAng<minAng){
+				minVolt=avVolt;
+				minAng=avAng;
+				clNumber=i;
+			}		
+		}
+		
+		newClusters.get(clNumber).setLabel("Low load rate");
+		newClusters.remove(clNumber);
+		
+		
 	}
 }
