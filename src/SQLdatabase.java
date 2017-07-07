@@ -1,19 +1,13 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.sql.DataSource;
 import javax.swing.JOptionPane;
-
 
 import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 
 public class SQLdatabase {
-	
-	
+
 	private final String database, learn, test;
 	// JDBC driver name and database URL
 	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -29,12 +23,12 @@ public class SQLdatabase {
 	public SQLdatabase(String database, String learn, String test) {
 		this.meas = new ArrayList<Measurement>();
 		this.measTest = new ArrayList<Measurement>();
-		
+
 		// Database and tables to get from MySQL
-		this.database=database;
-		this.learn=learn;
-		this.test=test;
-		
+		this.database = database;
+		this.learn = learn;
+		this.test = test;
+
 		create();
 	}
 
@@ -52,11 +46,11 @@ public class SQLdatabase {
 			System.out.println("Creating database...");
 			stmt = conn.createStatement();
 			conn = DriverManager.getConnection(DB_URL + "Subtables" + DISABLE_SSL, USER, PASS);
-			sql = "USE "+this.database;
+			sql = "USE " + this.database;
 			stmt.executeUpdate(sql);
 
 			// Import all measured values
-			sql = "SELECT * FROM "+this.learn;
+			sql = "SELECT * FROM " + this.learn;
 			ResultSet rs = stmt.executeQuery(sql); // execute query
 			// Insert values into an ArrayList
 			while (rs.next()) {
@@ -65,8 +59,8 @@ public class SQLdatabase {
 						Double.parseDouble(rs.getString("time"))));
 			}
 
-			// Import the learning set
-			sql = "SELECT * FROM "+this.test;
+			// Import the test set
+			sql = "SELECT * FROM " + this.test;
 			rs = stmt.executeQuery(sql); // execute query
 			// Insert values into an ArrayList
 			while (rs.next()) {
@@ -76,11 +70,11 @@ public class SQLdatabase {
 			}
 
 			System.out.println("Working database");
-			
+
 		} catch (MySQLSyntaxErrorException e) {
-			JOptionPane.showMessageDialog(null, "Those tables are not in the database, please check your sintax.");		
-		} catch (CommunicationsException ce){
-			JOptionPane.showMessageDialog(null, "The SQL server may not have been initialized.");		
+			JOptionPane.showMessageDialog(null, "Those tables are not in the database, please check your sintax.");
+		} catch (CommunicationsException ce) {
+			JOptionPane.showMessageDialog(null, "The SQL server may not have been initialized.");
 		} catch (SQLException se) {
 			// Handle errors for JDBC
 			se.printStackTrace();
@@ -98,12 +92,13 @@ public class SQLdatabase {
 		return measTest;
 	}
 
-	// Split list of measurements depending on the time variable and return the system's points
+	// Split list of measurements depending on the time variable and return the
+	// system's points
 	public static List<Point> splitByTime(List<Measurement> measurementList) {
 
 		List<Point> pointList = new ArrayList<Point>();
 		List<Measurement> measList = new ArrayList<Measurement>(measurementList);
-		
+
 		while (measList.size() != 0) {
 			// Get time from the first element of the set
 			double time = measList.get(0).getTime();
@@ -123,7 +118,7 @@ public class SQLdatabase {
 			// Remove the already added measurements from the list
 			measList.removeAll(measTime);
 		}
-		
+
 		return pointList;
 	}
 

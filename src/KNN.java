@@ -17,6 +17,7 @@ public class KNN {
 		}
 	}
 
+	// This is the core method of the kNN algorithm
 	public void go(Point testPoint) {
 
 		// Create object Distance that contains distance to a specific point and
@@ -32,7 +33,7 @@ public class KNN {
 		// Sort the distance List in increasing order
 		Collections.sort(distanceList, new DistanceComparator());
 
-		// Print the distance for the 4 closest neighbors
+		// Print the distance for the k closest neighbors
 		for (int x = 0; x < this.k; x++) {
 			System.out.println("Cluster nº " + distanceList.get(x).getNCluster() + " distance "
 					+ distanceList.get(x).getDistance());
@@ -45,6 +46,8 @@ public class KNN {
 		System.out.println("###############");
 	}
 
+	// This method check all the neighbors and returns the index of the most
+	// common cluster among them
 	private int assignCluster(ArrayList<Distance> distanceList, int k) {
 
 		int nCluster = -1;
