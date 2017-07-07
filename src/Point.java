@@ -104,7 +104,7 @@ public class Point {
 
 	// Method to calculate the average voltage and angle
 	public static double getAverage(List<Double> measure) {
-		double average = -1;
+		double average = 0;
 
 		for (int i = 0; i < measure.size(); i++) {
 			average += measure.get(i);
